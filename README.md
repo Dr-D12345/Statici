@@ -11,7 +11,7 @@ npm i statici
 ## Usage
 _Why should you even use this_
 
-The purpose of this library is to provide a way to render client side javascripts requests on the server to reduce load time. Giving the benefit of static delivery with dynamic data.This package is primarily for vanila html projects with a mild to low update frequency and has not been tested on rapid updating projects.
+The purpose of this library is to provide a way to render client side javascripts requests on the server to reduce load time. Giving the benefit of static delivery with dynamic data. This package is primarily for vanila html projects with a mild to low update frequency and has not been tested on rapid updating projects.
 
 **Give all scripts that are to be run and removed the attribute 'statici="true"'**
 
