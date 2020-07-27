@@ -22,7 +22,7 @@ This package is primarily for vanila html projects with a mild to low update fre
 
 const Statici = require("statici")
 var build = new Statici('./src-file-directory.html', "build")
-await build.buildToFile("./output-path/out.html')
+await build.buildToFile("./output-path/out.html")
 ```
 *src-file-directory.html*
 ```html
