@@ -1,0 +1,20 @@
+<html>
+    <body>
+    <script statici="true">
+        const event = new Event('build'); 
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                var doc = document.getElementById("demo");
+                var jsonDoc = JSON.parse(xmlHttp.responseText);
+                doc.innerHTML=jsonDoc['currentDateTime'];
+                document.dispatchEvent(event);
+            }
+           
+        }
+        xmlHttp.open("GET", 'http://worldclockapi.com/api/json/est/now', true);
+        xmlHttp.send(null);
+        </script>
+        <p id="demo"></p>
+    </body>
+    </html>

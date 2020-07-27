@@ -1,0 +1,21 @@
+{
+  "name": "statici",
+  "version": "0.1.1",
+  "description": "A way to elimnate network requests before their needed",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dr-D12345/Statici.git"
+  },
+  "scripts": {
+    "test": "echo Testing && node ./test/test.js"
+  },
+  "author": "DrD",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "http": "0.0.1-security",
+    "jsdom": "^16.3.0",
+    "path": "^0.12.7"
+  }
+}
