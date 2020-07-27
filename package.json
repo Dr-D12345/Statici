@@ -1,6 +1,6 @@
 {
   "name": "statici",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A way to elimnate network requests before their needed",
   "main": "src/index.js",
   "repository": {

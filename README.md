@@ -1,6 +1,13 @@
 # Statici
 A way to eliminate network requests before their needed
 
+
+## Installation
+
+
+```
+npm i statici
+```
 ## Usage
 _Why should you even use this_
 
