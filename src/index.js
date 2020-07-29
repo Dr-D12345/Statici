@@ -1,5 +1,6 @@
 var fs = require('fs')
 const jsdom = require("jsdom");
+
 const { JSDOM } = jsdom;
 
 const SERVERSCRIPT = "statici"
@@ -17,16 +18,17 @@ module.exports = class Build {
         this._verifyFile();
 
     }
-    async buildToFile(outputPath) {
-        const result = await this._jsdomRender(outputPath);
+    async buildToFile(outputPath, options = {}) {
+        
+        const result = await this._jsdomRender(outputPath, options);
         if (!result) {
             throw new Error("Somethings gone wrongs unable to render");
         } else {
-            return true
+            return result
         }
     }
-    async buildToString() {
-        const result = await this._jsdomRender();
+    async buildToString(options = {}) {
+        const result = await this._jsdomRender(null,options);
         return result;
 
     }
@@ -43,91 +45,71 @@ module.exports = class Build {
             });
         });
     }
+    setSrc(path) {
+        this.src = path;
+        this._verifyFile(path);
+    }
+    setEvent(eventName){
+        this.eventName = eventName;
+    }
+    resetEvent(){
+        this.eventName='load';
+    }
+    async _jsdomRender(outputPath, options) {
 
-    async _jsdomRender(outputPath) {
-
-        const options = {
+        const jsdomOp = {
             resources: 'usable',
             runScripts: 'dangerously',
         };
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
 
-            return JSDOM.fromFile(this.src, options).then((dom) => {
-                if (this.eventName == "load") {
-                    var html = dom.window.document.getElementsByTagName("html")[0].innerHTML
-                    var scriptTags = dom.window.document.getElementsByTagName("script");
-                    var toBeRemoved = []
-
-                    for (var i = 0; i < scriptTags.length; i++) {
-
-                        var script = scriptTags[i]
-
-                        if (script.getAttribute(SERVERSCRIPT) && script.getAttribute(SERVERSCRIPT).toLowerCase() == "true") {
-                            toBeRemoved.push(script)
-
-                        }
-
+            return JSDOM.fromFile(this.src, jsdomOp).then(async (dom) => {
+                try {
+                    if (options.data != null) {
+                        var testEvent = dom.window.document.createEvent("Event");
+                        testEvent.initEvent('statici', true, true);
+                        testEvent.data = options.data;
+                        dom.window.document.dispatchEvent(testEvent);
                     }
-                    if (i == scriptTags.length) {
-                        toBeRemoved.forEach(elem => {
-                            elem.remove()
-                        });
-                    }
-                    html = dom.window.document.getElementsByTagName("html")[0].innerHTML
-                    if (outputPath) {
-
-                        fs.writeFileSync(outputPath, "<html>\n" + html + "\n</html>");
-                        dom.window.document.removeEventListener('build', null);
-                        dom.window.close();
-                        return resolve(true)
-                    } else {
-                        dom.window.document.removeEventListener('build', null);
-                        dom.window.close();
-                        return resolve("<html>\n" + html + "\n</html>")
-                    }
-
-                } else {
-                    return dom.window.document.addEventListener(this.eventName, () => {
-                        var html = dom.window.document.getElementsByTagName("html")[0].innerHTML
-                        var scriptTags = dom.window.document.getElementsByTagName("script");
-                        var toBeRemoved = []
-
-                        for (var i = 0; i < scriptTags.length; i++) {
-
-                            var script = scriptTags[i]
-
-                            if (script.getAttribute(SERVERSCRIPT) && script.getAttribute(SERVERSCRIPT).toLowerCase() == "true") {
-                                toBeRemoved.push(script)
-
-                            }
-
-                        }
-                        if (i == scriptTags.length) {
-                            toBeRemoved.forEach(elem => {
-                                elem.remove()
-                            });
-                        }
-                        html = dom.window.document.getElementsByTagName("html")[0].innerHTML
+                    dom.window.document.addEventListener(this.eventName, async () => {
+                        var html = await this._cleanup(dom);
                         if (outputPath) {
-
                             fs.writeFileSync(outputPath, "<html>\n" + html + "\n</html>");
-                            dom.window.document.removeEventListener('build', null);
-                            dom.window.close();
-                            return resolve(true)
+                            dom.window.document.removeEventListener(this.eventName, null);
+                            dom.window.close(); 
+                            return resolve(outputPath.toString())
                         } else {
-                            dom.window.document.removeEventListener('build', null);
+                            dom.window.document.removeEventListener(this.eventName, null);
                             dom.window.close();
-                            return resolve("<html>\n" + html + "\n</html>")
+                            return resolve("<html>\n" + html + "\n</html>");
                         }
-
-
-                    })
+                    });
+                } catch (err) {
+                    console.error(err);
+                    return reject(err);
                 }
-            })
-
+            });
         });
 
 
+    }
+    _cleanup(dom) {
+        var scriptTags = dom.window.document.getElementsByTagName("script");
+        var toBeRemoved = []
+        for (var i = 0; i < scriptTags.length; i++) {
+            var script = scriptTags[i]
+            if (script.getAttribute(SERVERSCRIPT) && script.getAttribute(SERVERSCRIPT).toLowerCase() == "true") {
+                toBeRemoved.push(script)
+            }
+        }
+        if (i == scriptTags.length) {
+            toBeRemoved.forEach(elem => {
+                elem.remove()
+            });
+        }
+        var html = dom.window.document.getElementsByTagName("html")[0].innerHTML;
+        
+        return html;
     }
 
 

@@ -2,6 +2,9 @@
     <body>
     <script statici="true">
         const event = new Event('build'); 
+        window.addEventListener("statici", (evt)=>{
+            document.getElementById("console").innerHTML =JSON.stringify(evt.data)
+        })
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = function() { 
             if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
@@ -14,7 +17,17 @@
         }
         xmlHttp.open("GET", 'http://worldclockapi.com/api/json/est/now', true);
         xmlHttp.send(null);
+      /*  const delay = ms => new Promise(res => setTimeout(res, ms));
+        const waiting = async ()=>{
+            await delay(10000)
+            console.log("Waited 10000 seconds")
+            document.dispatchEvent(event);
+        }
+        waiting();
+
+        */
         </script>
         <p id="demo"></p>
+        <p id="console"></p>
     </body>
     </html>

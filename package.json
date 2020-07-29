@@ -3,14 +3,20 @@
   "version": "0.1.4",
   "description": "A way to elimnate network requests before their needed",
   "main": "src/index.js",
-  "keywords": ["serverside-rendering",
-  "html","javascript requests","vanilla html", "vanilla javascript","statici" ],
+  "keywords": [
+    "serverside-rendering",
+    "html",
+    "javascript requests",
+    "vanilla html",
+    "vanilla javascript",
+    "statici"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Dr-D12345/Statici.git"
   },
   "scripts": {
-    "test": "echo Testing && node ./test/test.js"
+    "test": "node ./test/test.js"
   },
   "author": "DrD",
   "license": "MIT",
@@ -20,5 +26,7 @@
     "jsdom": "^16.3.0",
     "path": "^0.12.7"
   },
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" }
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
 }
