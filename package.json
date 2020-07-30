@@ -1,6 +1,6 @@
 {
   "name": "statici",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A way to elimnate network requests before their needed",
   "main": "src/index.js",
   "keywords": [
@@ -25,8 +25,5 @@
     "http": "0.0.1-security",
     "jsdom": "^16.3.0",
     "path": "^0.12.7"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   }
 }
